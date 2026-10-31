@@ -1,0 +1,27 @@
+name: CI Test Suite
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate-code:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Verify HTML File Exists
+        run: |
+          if [ -f "index.html" ]; then
+            echo "SUCCESS: index.html found."
+          else
+            echo "ERROR: index.html is missing!" && exit 1
+          fi
+
+      - name: Basic Syntax & Structure Check
+        run: |
+          grep -iq "<html" index.html && echo "HTML validated." || (echo "Invalid HTML structure" && exit 1)
